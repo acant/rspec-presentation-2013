@@ -1,0 +1,7 @@
+#kata-continued ol li {
+	font-weight: bold;
+}
+
+#kata-continued ol li ul li {
+	font-weight: normal;
+}

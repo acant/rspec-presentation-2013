@@ -1,0 +1,160 @@
+outline
+	my background
+		unit testing Agile and TDD-ish through my entire career
+		C, C#, Perl, Java, PHP
+		using RSpec and Cucumber now
+	lets compare a unit test and a spec
+		=> find/write a simple unit test and a spec
+	where does this fit?
+		rspec
+		jasmine
+		cucumber
+	so what are the parts you have to work with
+		subject
+			@sut (system under test http://martinfowler.com/articles/mocksArentStubs.html)
+		describe (context)
+			;describe 'scopes' do
+			;describe '.authenticate' do
+			;describe '#admin?' do
+			;describe 'update' do
+		let/let!
+			lazy loaded
+			can use them before they are defined
+		hooks
+			before/after (all)
+			before/after (each)
+		it ( specify )
+		double ( stub, mock )
+			expectation
+				stub
+				stub_chain
+				should_receive
+			with
+			and_return, and_raise, and_throw
+		matchers
+			lots of existing matchers in rspec
+				be_*
+				has_*
+			shoulda
+		shared_examples
+			useful for common behaviour but not as much for tabular 
+		shared_context
+	somethings that I have discovered
+		the implicit subject
+		nest, but not too much
+			run into problems of tying to many things together
+			having the trace through too many nested groups is going to make it harder to understand what is really happening
+		too much mocking is a code smell
+			makes the specs hard to read, harder to debug, harder to understand
+			indicates that your method is worrying about the details of how objects are implemented
+				instead of a more OO encapsulating of methods
+				Law of Demeter violations make you specs more complicated
+			need an example with lots of mocks
+			then show how it would work with multiple objects and tests
+		specifying only things that matter
+			verifying that a variable is correctly passed around, but it is never manipulated
+		table like structure
+			before
+			context/let
+	new stuff
+		expect http://myronmars.to/n/dev-blog/2012/06/rspecs-new-expectation-syntax
+			immediate use would be this
+				;lambda { do_something }.should raise_error(SomeError)
+				;expect { something }.to raise_error(SomeError)
+			http://stackoverflow.com/questions/12260534/using-implicit-subject-with-expect-in-rspec-2-11
+		stub_const("SomeClass", fake_class)
+		named subject
+			http://blog.davidchelimsky.net/2012/05/13/spec-smell-explicit-use-of-subject/
+			;subject(:account) { CheckingAccount.new(Money.new(50, :USD)) }
+	problems I am still working on
+		devise mocking in controller
+		cancan mocking in controller
+	additional documentation
+		http://rspec.info/
+			this is not great
+		https://www.relishapp.com/rspec
+			I have found this more useful as of late
+			still not great
+		http://pragprog.com/book/achbd/the-rspec-book
+			head good thing about it, written by people on the RSpec team
+	code kata
+		http://osherove.com/tdd-kata-1/
+
+		Create a simple String calculator with a method int Add(string numbers)
+			The method can take 0, 1 or 2 numbers, and will return their sum (for an empty string it will return 0) for example “” or “1” or “1,2”
+			Start with the simplest test case of an empty string and move to 1 and two numbers
+			Remember to solve things as simply as possible so that you force yourself to write tests you did not think about
+			Remember to refactor after each passing test
+		Allow the Add method to handle an unknown amount of numbers
+		Allow the Add method to handle new lines between numbers (instead of commas).
+			the following input is ok:  “1\n2,3”  (will equal 6)
+			the following input is NOT ok:  “1,\n” (not need to prove it - just clarifying)
+		Support different delimiters
+			to change a delimiter, the beginning of the string will contain a separate line that looks like this:   “//[delimiter]\n[numbers…]” for example “//;\n1;2” should return three where the default delimiter is ‘;’ .
+			the first line is optional. all existing scenarios should still be supported
+		Calling Add with a negative number will throw an exception “negatives not allowed” - and the negative that was passed.if there are multiple negatives, show all of them in the exception message
+		--------------------------------------------------------------------------------
+		stop here if you are a beginner. Continue if you can finish the steps so far in less than 30 minutes.
+		--------------------------------------------------------------------------------
+		Numbers bigger than 1000 should be ignored, so adding 2 + 1001  = 2
+		Delimiters can be of any length with the following format:  “//[delimiter]\n” for example: “//[***]\n1***2***3” should return 6
+		Allow multiple delimiters like this:  “//[delim1][delim2]\n” for example “//[*][%]\n1*2%3” should return 6.
+		make sure you can also handle multiple delimiters with length longer than one char
+
+
+ideas to show
+	moving from @sut to subject
+	using context as tables
+	returning arbitrary/nonsense values to show that a result is passed correctly
+		us this to talk about thing about your scope
+		mutation - check by changing
+
+research
+	http://www.codekatas.org/casts.aspx?filterby=RSpec
+	https://github.com/jguitar/ruby-rspec-katas
+	https://github.com/wbailey/kata
+		this might be interesting for running code katas
+	https://github.com/kerryb/ruby-string-calculator
+	http://blog.bandzarewicz.com/slides/krug-the-perfect-rspec/#1
+
+how to do the presentation
+	http://thechangelog.com/wemux-multi-user-terminal-multiplexing-for-party-pair-pr/
+
+
+
+talk description
+	:"My last year with RSpec, a workshop"
+	:
+	:In my last year of RubyOnRails work I have learn more about RSpec and significantly changed how I write tests.
+	:I will present a review of the new syntax and some of the patterns I have been using.
+	:Some of the new syntax seemed very weird to me a year ago, but now they have improved readability of my tests.
+	:
+	:Some examples of the new syntax are:
+	;- let, describe, context blocks
+	;- implicit subjects
+	;- shared_context (optionally in their own modules)
+	:
+	:To put this into practice we will also try the "String Calculator Code Kata", http://osherove.com/tdd-kata-1/ using TDD and RSpec.
+	:
+	:Please bring a laptop (with Ruby installed) if you can, and we'll match people to pair program through the kata.
+	:The Rspec install is as easy as 'sudo gem install rspec', you can either pre-install or we'll just do it during the presentation.
+
+schedule
+	right now
+	Friday night(2h)
+	Sunday night(2h)
+	Monday night(2h)
+
+presentation options
+	looking for simple presentation software
+	something web and javascript so that I can put this online
+	impress.js is cool but probably more fiddly than I want to deal with
+	deck.js
+	fathom.js
+	http://blog.bandzarewicz.com/slides/krug-the-perfect-rspec/#1
+		this already auto-forwards for presenter notes, so this might be interesting to start with
+		already interested in doing bonjour auto-discovery
+
+
+think about how I can turn this outline into a story
+	maybe go from unit test to rspec to new rspec

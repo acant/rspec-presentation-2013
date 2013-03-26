@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=1024, user-scalable=no">
+
+	<title>My Last Year with RSpec: a workshop</title>
+
+	<meta name="description" content="My last year with RSpec: a workshop">
+	<meta name="author" content="Andrew Sullivan Cant">
+
+	
+	<!-- Required stylesheet -->
+	<link rel="stylesheet" href="core/deck.core.css">
+	
+	<!-- Extension CSS files go here. Remove or add as needed. -->
+	<link rel="stylesheet" href="extensions/goto/deck.goto.css">
+	<link rel="stylesheet" href="extensions/menu/deck.menu.css">
+	<link rel="stylesheet" href="extensions/navigation/deck.navigation.css">
+	<link rel="stylesheet" href="extensions/status/deck.status.css">
+	<link rel="stylesheet" href="extensions/hash/deck.hash.css">
+	<link rel="stylesheet" href="extensions/scale/deck.scale.css">
+
+	<!-- Style theme. More available in /themes/style/ or create your own. -->
+	<link rel="stylesheet" href="themes/style/web-2.0.css">
+	
+	<!-- Transition theme. More available in /themes/transition/ or create your own. -->
+	<link rel="stylesheet" href="themes/transition/horizontal-slide.css">
+	
+	<!-- Required Modernizr file -->
+	<script src="modernizr.custom.js"></script>
+
+	<link rel="stylesheet" href="mine.css">
+</head>
+<body class="deck-container">
+
+<!-- Begin slides. Just make elements with a class of slide. -->
+
+<section class="slide" id="title-slide">
+	<h1>My Last Year with RSpec:<br />a workshop</h1>
+</section>
+
+<section class="slide">
+	<h1>Who?</h1>
+</section>
+
+<section class="slide">
+	<h2>Test I have know before</h2>
+	<ul>
+		<li>C</li>
+		<li>C#</li>
+		<li>Perl</li>
+		<li>Java</li>
+		<li>PHP</li>
+	</ul>
+</section>
+
+<section class="slide">
+	<h2>What I am using now</h2>
+	<ul>
+		<li>RSpec</li>
+		<li>Cucumber</li>
+		<li>Jasmine</li>
+	</ul>
+</section>
+
+<section class="slide">
+	<pre><code>
+class ClassTest < Test::Unit::TestCase
+  def setup
+    #Do setup stuff
+  end
+
+  def test_method
+    sut = Class.new('boop')
+    foobar = 'DEADBEEF'
+    assert_equal sut.method('beep'), foobar
+    assert_equal system_property, foobar
+    assert_equal other_system_property, 42
+  end
+end
+	</pre></code>
+</section>
+
+<section class="slide">
+	<pre><code>
+describe Class
+  before(:each) do
+    #Do setup stuff
+  end
+
+  describe '#method' do
+    subject { Class.new('boop').method('beep') }
+
+    let(:foobar) { 'DEADBEEF' }
+
+    it { should == foobar }
+    specify { system_property.should == foobar }
+    specify { other_system_property.should == 42 }
+  end
+end
+	</pre></code>
+</section>
+
+<section class="slide">
+	<h1>Readability<br />and<br />Aliases</h1>
+</section>
+
+<section class="slide">
+	<h1>What to describe?</h1>
+</section>
+
+<section class="slide">
+	<h2>Methods</h2>
+	<ul>
+		<li><code>describe '.authenticate' do</code></li>
+		<li><code>describe '#admin?' do</code></li>
+		<li><code>describe 'update' do</code></li>
+	</ul>
+
+	<h2>Groups of methods</h2>
+	<pre><code>
+  describe 'scopes' do
+    describe '.things' do
+    end
+
+    describe '.things' do
+    end
+  end
+	</code></pre>
+</section>
+
+<section class="slide">
+	<h1>Define the situation</h1>
+</section>
+
+<section class="slide">
+	<h2>Group it...</h2>
+	<pre><code>
+  describe '#method' do
+    context 'when x' do
+      #setup
+      it {}
+    end
+
+    context 'when y' do
+      #setup
+      it { ... }
+    end
+end
+	</pre></code>
+</section>
+
+<section class="slide">
+	<h2>(but not too much)</h2>
+	<pre><code>
+  context 'first' do
+    context 'second' do
+      context 'third' do
+        context 'forth' do
+        end
+      end
+    end
+  end
+	</pre></code>
+</section>
+
+<section class="slide">
+	<h2>..and define it (usually)</h2>
+	<pre><code>
+  let(:variable) { 'value' }
+	</code></pre>
+
+	<pre><code>
+  let!(:variable) { Database.make_thing() }
+	</code></pre>
+</section>
+
+<section class="slide">
+	<h2>...and define it (sometimes)</h2>
+	<pre><code>
+  before { Database.clear_existing }
+  before do
+    variable.field = 'boop'
+
+    System.property.make_it_interesting
+    System.other_property.make_it_ready
+  end
+	</code></pre>
+</section>
+
+<section class="slide">
+	<h2>..and define it (almost never)</h2>
+	<pre><code>
+  before(:all) { }
+  before(:each) { }
+  after(:all) { }
+  after(:each) { }
+	</code></pre>
+</section>
+
+<section class="slide">
+	<h2>Mocking</h2>
+	<pre><code>
+  double('my_name', :field =&gt; 'value')
+  mock('my_name')
+  stub('my_name')
+	</code></pre>
+
+	<h2>...and for Rails</h2>
+	<pre><code>
+  mock_model(MyModel)
+  stub_model(MyModel)
+	</code></pre>
+
+</section>
+
+<section class="slide">
+	<h2>Expectations</h2>
+	<pre><code>
+  double.stub(:method).
+    with('argument').
+    and_return('result')
+	</code></pre>
+
+	<pre><code>
+  double.should_receive(:method).
+    with('argument').
+    and_return('result')
+	</code></pre>
+</section>
+
+<section class="slide">
+	<h2>Other results...</h2>
+	<pre><code>
+  double.stub(:method).and_return('result')
+	</code></pre>
+	<pre><code>
+  double.stub(:method).and_raise(StandardError)
+	</code></pre>
+	<pre><code>
+  double.stub(:method).and_throw(StandardError)
+	</code></pre>
+</section>
+
+<section class="slide">
+	<h2>Mock...but not too much</h2>
+
+	<pre><code>
+  model.method1('value').method2('value').method3('value')
+	</code></pre>
+
+	<pre><code>
+  nested_model2 = stub('model2').should_receive(:method3).
+    with('value').
+    and_return('final result')
+  nested_model = stub('model1').should_recieve(:method2).
+    with('value').
+    and_return(nested_model2)
+  stub('model').should_receive(:method1).
+    with('value').
+    and_return(nested_model)
+	</code></pre>
+</section>
+
+<section class="slide">
+	<h1>Refactor...<br />
+		Refactor...<br />
+		Refactor!
+	</h1>
+</section>
+
+<section class="slide">
+	<h2>And finally it should...</h2>
+	<pre><code>
+  subject { 'expected' }
+  it { should == 'expected' }
+	</code></pre>
+
+	<pre><code>
+  subject { 'expected' }
+  its(:count) { should == 8 }
+	</code></pre>
+
+	<pre><code>
+  before { get :show  )
+  specify { response.body.should == 'expected' }
+	</code></pre>
+</section>
+
+<section class="slide">
+	<h2>And we finally have all the pieces for...</h2>
+	<pre><code>
+describe Class
+  before(:each) do
+    #Do setup stuff
+  end
+
+  describe '#method' do
+    subject { Class.new('boop').method('beep') }
+
+    let(:foobar) { 'DEADBEEF' }
+
+    it { should == foobar }
+    specify { system_property.should == foobar }
+    specify { other_system_property.should == 42 }
+  end
+end
+	</pre></code>
+</section>
+
+<section class="slide">
+	<h2>Make a table</h2>
+	<pre><code>
+  describe '#method' do
+    subject { model.method(argument) }
+    context { let(:argument) { 'x' } ; it { should be_false } }
+    context { let(:argument) { 'y' } ; it { should be_false } }
+    context { let(:argument) { 'z' } ; it { should be_true } }
+  end
+	</code></pre>
+</section>
+
+<section class="slide">
+	<h2>References</h2>
+	<ul>
+		<li>
+			<a href="http://rspec.info/">http://rspec.info/</a><br />
+			this is not great
+		</li>
+		<li>
+			<a href="https://www.relishapp.com/rspec">https://www.relishapp.com/rspec</a><br />
+			I have found this more useful as of late
+		</li>
+		<li>
+			<a href="http://pragprog.com/book/achbd/the-rspec-book">http://pragprog.com/book/achbd/the-rspec-book</a><br />
+			head good thing about it, written by people on the RSpec team
+		</li>
+	</ul>
+</section>
+
+<section class="slide">
+	<h1>Kata</h1>
+	<h2><a href="http://osherove.com/tdd-kata-1/">http://osherove.com/tdd-kata-1/</a></h2>
+</section>
+
+<section class="slide">
+	<h2>Step 1: Create a simple String calculator</h2>
+	<ul>
+		<li>with the method <strong>int Add(string numbers)</strong></li>
+		<li>The method can take 0, 1 or 2 numbers, and will return their sum (for an empty string it will return 0) for example “” or “1” or “1,2”</li>
+		<li>Start with the simplest test case of an empty string and move to 1 and two numbers</li>
+		<li>Remember to solve things as simply as possible so that you force yourself to write tests you did not think about</li>
+		<li>Remember to refactor after each passing test</li>
+	</ul>
+</section>
+
+<section class="slide" id="kata-continued">
+	<h2>kata continued...</h2>
+	<ol start="2">
+		<li><strong>Allow the Add method to handle an unknown amount of numbers</strong></li>
+		<li>
+			Allow the Add method to handle new lines between numbers (instead of commas).
+			<ul>
+				<li>the following input is ok:  “1\n2,3”  (will equal 6)</li>
+				<li>the following input is NOT ok:  “1,\n” (not need to prove it - just clarifying)</li>
+			</ul>
+		</li>
+		<li>Support different delimiters
+			<ul>
+				<li>to change a delimiter, the beginning of the string will contain a separate line that looks like this:   “//[delimiter]\n[numbers…]” for example “//;\n1;2” should return three where the default delimiter is ‘;’</li>
+				<li>the first line is optional. all existing scenarios should still be supported</li>
+			</ul>
+		</li>
+		<li>
+			Calling Add with a negative number will throw an exception “negatives not allowed”
+			<ul>
+				<li>include the negative that was passed</li>
+				<li>if there are multiple negatives, show all of them in the exception message</li>
+			</ul>
+		</li>
+	</ol>
+</section>
+
+<!-- End slides. -->
+
+
+<!-- Begin extension snippets. Add or remove as needed. -->
+
+<!-- deck.navigation snippet -->
+<a href="#" class="deck-prev-link" title="Previous">&#8592;</a>
+<a href="#" class="deck-next-link" title="Next">&#8594;</a>
+
+<!-- deck.status snippet -->
+<p class="deck-status">
+	<span class="deck-status-current"></span>
+	/
+	<span class="deck-status-total"></span>
+</p>
+
+<!-- deck.goto snippet -->
+<form action="." method="get" class="goto-form">
+	<label for="goto-slide">Go to slide:</label>
+	<input type="text" name="slidenum" id="goto-slide" list="goto-datalist">
+	<datalist id="goto-datalist"></datalist>
+	<input type="submit" value="Go">
+</form>
+
+<!-- deck.hash snippet -->
+<a href="." title="Permalink to this slide" class="deck-permalink">#</a>
+
+<!-- End extension snippets. -->
+
+
+<!-- Required JS files. -->
+<script src="jquery-1.7.2.min.js"></script>
+<script src="core/deck.core.js"></script>
+
+<!-- Extension JS files. Add or remove as needed. -->
+<script src="core/deck.core.js"></script>
+<script src="extensions/hash/deck.hash.js"></script>
+<script src="extensions/menu/deck.menu.js"></script>
+<script src="extensions/goto/deck.goto.js"></script>
+<script src="extensions/status/deck.status.js"></script>
+<script src="extensions/navigation/deck.navigation.js"></script>
+<script src="extensions/scale/deck.scale.js"></script>
+
+<!-- Initialize the deck. You can put this in an external file if desired. -->
+<script>
+	$(function() {
+		$.deck('.slide');
+	});
+</script>
+</body>
+</html>
