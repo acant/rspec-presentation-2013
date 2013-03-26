@@ -12,5 +12,9 @@ describe StringCalculator do
 		#of numbers. However, we could do more. Running several tests which
 		#check a random number of numbers could do it.
 		context { let(:numbers) { '1,2,3,5,7,9' } ; it { should == 27 } }
+		context { let(:numbers) { "1\n2" }        ; it { should == 3 } }
+		context { let(:numbers) { "1\n2,3" }      ; it { should == 6 } }
+		context { let(:numbers) { "1,2\n3" }      ; it { should == 6 } }
+		context { let(:numbers) { "1\n2\n3" }     ; it { should == 6 } }
 	end
 end
